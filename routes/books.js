@@ -15,16 +15,18 @@ router.get('/', async (request, responce) => {
 router.get('/create', (req, res) => {
     res.render("books/create", {
         title: "Создание книги",
-        book: {},
+        book: {
+            title: '',
+            description: '',
+        },
     });
 });
 
 router.post('/create', async (req, res) => {
-    const {title, desc} = req.body;
-
+    const {title, description, authors, favorite, fileCover, fileName} = req.body;
     const newBook = new Book({
-        title: 'qwe',
-        desc,
+        title: title,
+        description: description,
     });
     try {
         await newBook.save();
@@ -39,6 +41,9 @@ router.get('/:id', async (req, res) => {
     let book;
     try {
         book = await Book.findById(id);
+        if (!book) {
+            res.status(404).redirect('/404');
+        }
     } catch (e) {
         console.error(e);
         res.status(404).redirect('/404');
@@ -54,6 +59,9 @@ router.get('/update/:id', async (req, res) => {
     let book;
     try {
         book = await Book.findById(id);
+        if (!book) {
+            res.status(404).redirect('/404');
+        }
     } catch (e) {
         console.error(e);
         res.status(404).redirect('/404');
@@ -66,16 +74,14 @@ router.get('/update/:id', async (req, res) => {
 
 router.post('/update/:id', async (req, res) => {
     const {id} = req.params;
-    const {title, desc} = req.body;
-
+    const {title, description, authors, favorite, fileCover, fileName} = req.body;
     try {
-        await Book.findByIdAndUpdate(id, {title, desc});
+        await Book.findByIdAndUpdate(id, {title: title, description: description});
+        res.redirect(`/books/${id}`);
     } catch (e) {
         console.error(e);
-        res.status(404).redirect('/404');
+        res.status(500).json();
     }
-
-    res.redirect(`/books/${id}`);
 });
 
 router.post('/delete/:id', async (req, res) => {

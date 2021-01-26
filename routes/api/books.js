@@ -16,12 +16,12 @@ router.get('/:id', async (req, res) => {
         res.json(book);
     } catch (e) {
         console.error(e);
-        res.status(404).json("Не найдено");
+        res.status(404).json("Нет такой книги");
     }
 });
 
 router.post('/', async (req, res) => {
-    const {title, desc} = req.body;
+    const {title, description} = req.body;
 
     const newBook = new Book({
         title: 'title...',
@@ -39,10 +39,10 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
     const {id} = req.params;
-    const {title, desc} = req.body;
+    const {title, description} = req.body;
 
     try {
-        await Book.findByIdAndUpdate(id, {title: '22', desc: '333'});
+        await Book.findByIdAndUpdate(id, {title: '22', description: '333'});
         res.redirect(`/api/books/${id}`);
     } catch (e) {
         console.error(e);

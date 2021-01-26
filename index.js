@@ -1,5 +1,5 @@
 const express = require('express');
-const formData = require("express-form-data");
+const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
@@ -18,7 +18,7 @@ const booksRouter = require('./routes/books');
 const app = express();
 app.set('view engine', 'ejs');
 
-app.use(formData.parse());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 app.use(loggerMiddleware);
 
